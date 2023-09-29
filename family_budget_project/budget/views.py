@@ -21,3 +21,23 @@ class BudgetListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+class BudgetDetailsView(generics.RetrieveAPIView):
+    serializer_class = BudgetDetailsSerializer
+
+    def get_queryset(self):
+        return Budget.objects.filter(user=self.request.user)
+
+    def get_object(self):
+        budget = super().get_object()
+        incomes = Income.objects.filter(budget=budget)
+        expenses = Expense.objects.filter(budget=budget)
+        return budget, incomes, expenses
+
+    def retrieve(self, request, *args, **kwargs):
+        budget, incomes, expenses = self.get_object()
+        serializer = self.get_serializer(budget)
+        data = serializer.data
+        data['incomes'] = IncomeSerializer(incomes, many=True).data
+        data['expenses'] = ExpenseSerializer(expenses, many=True).data
+        return Response(data)
+
