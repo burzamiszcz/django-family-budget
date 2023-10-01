@@ -1,7 +1,8 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from .models import Category, Budget, Income, Expense
+from django.contrib.auth.models import User
 from rest_framework.response import Response
-from .serializers import CategorySerializer, BudgetSerializer, IncomeSerializer, ExpenseSerializer, BudgetDetailsSerializer
+from .serializers import CategorySerializer, BudgetSerializer, IncomeSerializer, ExpenseSerializer, ShareBudgetSerializer
 
 
 class BudgetListCreateView(generics.ListCreateAPIView):
@@ -22,7 +23,7 @@ class BudgetListCreateView(generics.ListCreateAPIView):
 
 
 class BudgetDetailsView(generics.RetrieveAPIView):
-    serializer_class = BudgetDetailsSerializer
+    serializer_class = BudgetSerializer
 
     def get_queryset(self):
         return Budget.objects.filter(user=self.request.user)
@@ -41,3 +42,62 @@ class BudgetDetailsView(generics.RetrieveAPIView):
         data['expenses'] = ExpenseSerializer(expenses, many=True).data
         return Response(data)
 
+
+class IncomeCreateView(generics.CreateAPIView):
+    serializer_class = IncomeSerializer
+
+    def perform_create(self, serializer):
+        budget_id = self.kwargs.get('budget_id')
+        budget = Budget.objects.get(pk=budget_id, user=self.request.user)
+        serializer.save(budget=budget)
+
+class ExpenseCreateView(generics.CreateAPIView):
+    serializer_class = ExpenseSerializer
+
+    def perform_create(self, serializer):
+        budget_id = self.kwargs.get('budget_id')
+        budget = Budget.objects.get(pk=budget_id, user=self.request.user)
+        serializer.save(budget=budget)
+
+
+class ShareBudgetUpdateView(generics.UpdateAPIView):
+    serializer_class = ShareBudgetSerializer
+
+    def get_queryset(self):
+        return Budget.objects.filter(user=self.request.user)
+    
+    def get_object(self):
+        budget = super().get_object()
+        return budget
+    
+    def perform_update(self, serializer):
+        users_to_share_with = serializer.validated_data.get('shared_with')
+        for user in users_to_share_with:
+            try:
+                user_object = User.objects.get(username=user.username)
+                budget = self.get_object()
+                budget.shared_with.add(user_object)
+            except User.DoesNotExist:
+                raise serializers.ValidationError(f"User with username {user.username} does not exist.")
+
+        return Response('Users added to budget successfully', status=status.HTTP_200_OK)
+    
+
+class ShareBudgetDeleteView(generics.DestroyAPIView):
+    serializer_class = ShareBudgetSerializer
+
+    def get_queryset(self):
+        return Budget.objects.filter(user=self.request.user)
+    
+    def get_object(self):
+        budget = super().get_object()
+        return budget
+    
+    def perform_destroy(self, instance):
+        user_to_remove = self.request.data.get('username')
+        try:
+            user = User.objects.get(username=user_to_remove)
+            instance.shared_with.remove(user)
+            return Response({'message': f'User {user_to_remove} removed from budget sharing successfully'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User with this username does not exist.")
