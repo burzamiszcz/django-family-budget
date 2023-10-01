@@ -9,7 +9,7 @@ To set up and run the Django Family Budget, follow the steps below:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/burzamiszcz/django-family-budget.git
 ```
 2. Go to the app folder
 ```bash
