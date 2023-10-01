@@ -1,12 +1,18 @@
 from rest_framework import generics, status, serializers
-from .models import Category, Budget, Income, Expense
+from .models import Budget, Income, Expense
 from django.contrib.auth.models import User
 from rest_framework.response import Response
-from .serializers import CategorySerializer, BudgetSerializer, IncomeSerializer, ExpenseSerializer, ShareBudgetSerializer
-
+from .serializers import BudgetSerializer, IncomeSerializer, ExpenseSerializer, ShareBudgetSerializer
+from rest_framework.pagination import PageNumberPagination
+from .pagination import *
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import BudgetFilter
 
 class BudgetListCreateView(generics.ListCreateAPIView):
     serializer_class = BudgetSerializer
+    pagination_class = Pagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BudgetFilter
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -24,7 +30,7 @@ class BudgetListCreateView(generics.ListCreateAPIView):
 
 class BudgetDetailsView(generics.RetrieveAPIView):
     serializer_class = BudgetSerializer
-
+    
     def get_queryset(self):
         return Budget.objects.filter(user=self.request.user)
 
