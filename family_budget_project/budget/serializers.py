@@ -1,13 +1,7 @@
 
 from rest_framework import serializers
-from .models import Budget, Income, Expense, Category
+from .models import Budget, Income, Expense
 from django.contrib.auth.models import User
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
 
 class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
