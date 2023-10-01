@@ -1,0 +1,57 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "admin",
+            "last_login": "2022-01-01T12:34:56Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@example.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2022-01-01T12:34:45.162Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "budget.budget",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "title": "Budget 1",
+            "shared_with": []
+        }
+    },
+    {
+        "model": "budget.budget",
+        "pk": 2,
+        "fields": {
+            "user": 1,
+            "title": "Budget 2",
+            "shared_with": [1]
+        }
+    },
+    {
+        "model": "budget.income",
+        "pk": 1,
+        "fields": {
+            "budget": 1,
+            "source": "Job",
+            "amount": "1000.00",
+            "date": "2022-01-15"
+        }
+    },
+    {
+        "model": "budget.expense",
+        "pk": 1,
+        "fields": {
+            "budget": 1,
+            "amount": "500.00",
+            "date": "2022-01-20"
+        }
+    }
+]
