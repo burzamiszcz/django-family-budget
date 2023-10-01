@@ -24,8 +24,7 @@ class BudgetSerializer(serializers.ModelSerializer):
         model = Budget
         fields = '__all__'
 
-class BudgetDetailsSerializer(serializers.ModelSerializer):
-
+class ShareBudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Budget
-        fields = '__all__'
+        fields = ['shared_with']
