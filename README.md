@@ -11,20 +11,24 @@ To set up and run the Django Family Budget, follow the steps below:
 ```bash
 git clone https://github.com/burzamiszcz/django-family-budget.git
 ```
-2. Go to the app folder
+2. Go to the repo folder
 ```bash
-cd family_budget_project
+cd django-family-budget
 ```
 3. Install the required dependencies:
 ```bash
 pip install -r requirements.txt
+```
+3. Go to the app folder
+```bash
+cd family_budget_project
 ```
 5. Make migrations:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
-5. Make migrations:
+6. Load data:
 ```bash
 python manage.py loaddata fixtures/initial_data.json
 ```
