@@ -2,6 +2,9 @@
 A project made for recruitment purposes. Due to the voluminousness of the task and lack of time, I decided to limit myself to selected functionalities. I skipped logging and registration (I think this is the basis of the basics), expenses and income do not have categories, deletion I implemented only for budget sharing, implemented one test (I think in recruitment tasks it is a matter of understanding how tests work, here you could write MANY of them) and maybe something else I did not mention.
 And there is not needed orchestration so docker was not used :)
 
+Dear reviewer,
+if you have any questions feel free to let me know. I am really excited about the company so I'll be happy to try my best to perform as well as possible :)
+
 Below I described the installation process and existing endpoints
 
 
